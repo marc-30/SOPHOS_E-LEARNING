@@ -1,0 +1,25 @@
+{% extends "gestion/base.html" %}
+{% block titre %}Étudiants{% endblock %}
+{% block h1 %}Étudiants{% endblock %}
+{% block contenu %}
+{% include "gestion/_recherche.html" with placeholder="Rechercher par nom, identifiant ou e-mail…" %}
+<div class="carte carte--table">
+  <table class="table">
+    <thead><tr><th>Étudiant</th><th>E-mail</th><th>Inscrit le</th><th>Dernière connexion</th><th class="num">Cours</th><th>Statut</th><th></th></tr></thead>
+    <tbody>
+    {% for e in page %}
+      <tr>
+        <td><a class="lien-fort avatar-ligne" href="{% url 'gestion:etudiant_detail' e.pk %}">{% include "gestion/_avatar.html" with photo=e.profil.photo nom=e.get_full_name|default:e.username %}{{ e.get_full_name|default:e.username }}</a></td>
+        <td>{{ e.email|default:"—" }}</td>
+        <td>{{ e.date_joined|date:"d/m/Y" }}</td>
+        <td>{{ e.last_login|date:"d/m/Y H:i"|default:"—" }}</td>
+        <td class="num">{{ e.nb_cours }}</td>
+        <td><span class="pastille {% if e.is_active %}pastille--ok{% else %}pastille--off{% endif %}">{% if e.is_active %}Actif{% else %}Désactivé{% endif %}</span></td>
+        <td class="table__actions"><a class="btn btn--petit" href="{% url 'gestion:etudiant_modifier' e.pk %}">Modifier</a></td>
+      </tr>
+    {% empty %}<tr><td colspan="7" class="vide">Aucun étudiant.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "gestion/_pagination.html" %}
+{% endblock %}

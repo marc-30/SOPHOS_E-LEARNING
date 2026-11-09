@@ -1,0 +1,27 @@
+{% extends "gestion/base.html" %}
+{% block titre %}Professeurs{% endblock %}
+{% block h1 %}Professeurs{% endblock %}
+{% block actions %}<a class="btn btn--plein" href="{% url 'gestion:professeur_nouveau' %}">+ Nouveau professeur</a>{% endblock %}
+{% block contenu %}
+{% include "gestion/_recherche.html" with placeholder="Rechercher un professeur…" %}
+<div class="carte carte--table">
+  <table class="table">
+    <thead><tr><th>Professeur</th><th>E-mail</th><th class="num">Cours</th><th>Statut</th><th></th></tr></thead>
+    <tbody>
+    {% for p in page %}
+      <tr>
+        <td><a class="lien-fort avatar-ligne" href="{% url 'gestion:professeur_modifier' p.pk %}">{% include "gestion/_avatar.html" with photo=p.photo nom=p.nom %}{{ p.nom }}</a></td>
+        <td>{{ p.email|default:"—" }}</td>
+        <td class="num">{{ p.nb_cours }}</td>
+        <td><span class="pastille {% if p.actif %}pastille--ok{% else %}pastille--off{% endif %}">{% if p.actif %}Actif{% else %}Inactif{% endif %}</span></td>
+        <td class="table__actions">
+          <a class="btn btn--petit" href="{% url 'gestion:professeur_modifier' p.pk %}">Modifier</a>
+          <a class="btn btn--petit btn--danger-lien" href="{% url 'gestion:professeur_supprimer' p.pk %}">Supprimer</a>
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="5" class="vide">Aucun professeur.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "gestion/_pagination.html" %}
+{% endblock %}

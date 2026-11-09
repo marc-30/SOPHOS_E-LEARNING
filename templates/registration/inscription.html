@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block classe_corps %} class="page-auth"{% endblock %}
+{% block entete %}{% endblock %}
+{% block titre %}Inscription — Sophos Académie{% endblock %}
+
+{% block contenu %}
+<main class="auth">
+  <div class="auth__boite">
+    <a href="{% url 'accueil' %}"><img class="auth__logo" src="{% static 'images/logo.jpg' %}" alt="Sophos Académie"></a>
+    <h1>Créer un compte gratuit</h1>
+    <form method="post" class="formulaire" novalidate>{% csrf_token %}
+      {% for field in form %}
+      <label>{{ field.label }}
+        {{ field }}
+        {% for e in field.errors %}<span class="erreur">{{ e }}</span>{% endfor %}
+      </label>
+      {% endfor %}
+      <button class="bouton bouton--large" type="submit">Créer mon compte</button>
+    </form>
+    <p class="petit">Déjà inscrit ? <a href="{% url 'connexion' %}">Se connecter</a></p>
+  </div>
+</main>
+{% endblock %}

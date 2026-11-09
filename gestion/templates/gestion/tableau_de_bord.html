@@ -1,0 +1,46 @@
+{% extends "gestion/base.html" %}
+{% block titre %}Tableau de bord{% endblock %}
+{% block h1 %}Tableau de bord{% endblock %}
+{% block contenu %}
+<section id="tdb" data-url="{% url 'gestion:api_stats' %}" data-devise="{{ devise }}">
+  <form class="filtres" id="filtres" aria-label="Filtres du tableau de bord">
+    <label class="filtre">Indicateur
+      <select name="metrique" id="f-metrique">
+        {% for cle, nom in metriques.items %}<option value="{{ cle }}">{{ nom }}</option>{% endfor %}
+      </select>
+    </label>
+    <div class="filtre">Période
+      <div class="segments" role="group" aria-label="Période">
+        <button type="button" class="segment" data-periode="7j">7 jours</button>
+        <button type="button" class="segment actif" data-periode="30j">30 jours</button>
+        <button type="button" class="segment" data-periode="90j">90 jours</button>
+        <button type="button" class="segment" data-periode="12m">12 mois</button>
+        <button type="button" class="segment" data-periode="perso">Personnalisée</button>
+      </div>
+    </div>
+    <div class="filtre filtre--dates" id="f-dates" hidden>
+      <label>Du <input type="date" id="f-debut"></label>
+      <label>Au <input type="date" id="f-fin"></label>
+    </div>
+  </form>
+
+  <div class="kpis" id="kpis" aria-live="polite"></div>
+
+  <div class="carte">
+    <div class="carte__entete">
+      <h2 class="carte__titre" id="graphe-titre">Étudiants actifs</h2>
+      <p class="graphe-periode" id="graphe-periode"></p>
+    </div>
+    <div class="graphe" id="graphe" role="img" aria-label="Courbe d’évolution"></div>
+    <ul class="legende" id="legende"></ul>
+  </div>
+
+  <div class="carte carte--table">
+    <h2 class="carte__titre carte__titre--marge">Cours les plus suivis sur la période</h2>
+    <table class="table" id="classement">
+      <thead><tr><th class="rang">#</th><th>Cours</th><th class="num">Étudiants</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

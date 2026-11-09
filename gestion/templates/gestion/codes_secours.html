@@ -1,0 +1,10 @@
+{% extends "gestion/base.html" %}
+{% block titre %}Codes de secours{% endblock %}
+{% block h1 %}Vos codes de secours{% endblock %}
+{% block contenu %}
+<div class="carte carte--etroite">
+  <p class="alerte">Notez ces codes maintenant : <strong>ils ne seront plus jamais affichés</strong>. Chacun ne sert qu’une fois et remplace le code du téléphone si vous le perdez.</p>
+  <ul class="codes">{% for c in codes %}<li>{{ c }}</li>{% endfor %}</ul>
+  <div class="actions"><a class="btn btn--plein" href="{% url 'gestion:tableau_de_bord' %}">J’ai noté mes codes, continuer</a></div>
+</div>
+{% endblock %}

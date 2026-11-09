@@ -1,0 +1,58 @@
+{% load static %}<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{% block titre %}Administration{% endblock %} — Sophos Académie</title>
+  <link rel="icon" href="{% static 'images/logo-s.png' %}">
+  <link rel="stylesheet" href="{% static 'gestion/gestion.css' %}">
+</head>
+<body class="app">
+  <aside class="menu" id="menu">
+    <a class="menu__logo" href="{% url 'gestion:tableau_de_bord' %}">
+      <img src="{% static 'images/logo-s.png' %}" alt=""><span>Sophos <small>Administration</small></span>
+    </a>
+    <nav class="menu__nav" aria-label="Navigation principale">
+      <a class="menu__lien{% if section == 'tableau' %} actif{% endif %}" href="{% url 'gestion:tableau_de_bord' %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12l9-8 9 8M5 10v10h14V10"/></svg>Tableau de bord
+      </a>
+      <details class="menu__groupe"{% if section in 'cours,categories,etudiants,professeurs,ventes' and section %} open{% endif %}>
+        <summary>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Gestion
+          <svg class="menu__fleche" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <a class="menu__sous{% if section == 'cours' %} actif{% endif %}" href="{% url 'gestion:cours_liste' %}">Cours</a>
+        <a class="menu__sous{% if section == 'categories' %} actif{% endif %}" href="{% url 'gestion:categories_liste' %}">Catégories</a>
+        <a class="menu__sous{% if section == 'etudiants' %} actif{% endif %}" href="{% url 'gestion:etudiants_liste' %}">Étudiants</a>
+        <a class="menu__sous{% if section == 'professeurs' %} actif{% endif %}" href="{% url 'gestion:professeurs_liste' %}">Professeurs</a>
+        <a class="menu__sous{% if section == 'ventes' %} actif{% endif %}" href="{% url 'gestion:ventes_liste' %}">Ventes</a>
+      </details>
+    </nav>
+    <div class="menu__pied">
+      <a class="menu__lien{% if section == 'compte' %} actif{% endif %}" href="{% url 'gestion:mot_de_passe' %}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>{{ user.get_username }}
+      </a>
+      <form method="post" action="{% url 'gestion:deconnexion' %}">{% csrf_token %}
+        <button class="menu__lien menu__sortie" type="submit">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H5v16h4M16 8l4 4-4 4M20 12H9"/></svg>Se déconnecter
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <div class="contenu">
+    <header class="haut">
+      <button class="haut__burger" type="button" id="burger" aria-label="Ouvrir le menu" aria-controls="menu">☰</button>
+      <h1 class="haut__titre">{% block h1 %}{% endblock %}</h1>
+      <div class="haut__actions">{% block actions %}{% endblock %}</div>
+    </header>
+    <main class="page">
+      {% if messages %}<div class="messages">{% for m in messages %}<p class="message message--{{ m.tags }}" role="status">{{ m }}</p>{% endfor %}</div>{% endif %}
+      {% block contenu %}{% endblock %}
+    </main>
+  </div>
+  <script src="{% static 'gestion/gestion.js' %}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

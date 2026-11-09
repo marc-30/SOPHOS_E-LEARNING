@@ -1,0 +1,32 @@
+{% load static %}<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Activer la double authentification — Administration Sophos</title>
+  <link rel="icon" href="{% static 'images/logo.jpg' %}">
+  <link rel="stylesheet" href="{% static 'gestion/gestion.css' %}">
+</head>
+<body class="connexion">
+  <main class="connexion__boite connexion__boite--large">
+    <h1>Sécurisez votre compte avec votre téléphone</h1>
+    <ol class="etapes">
+      <li>Installez une application d’authentification : <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> ou <strong>Authy</strong>.</li>
+      <li>Dans l’application, ajoutez un compte et scannez ce QR code.
+        <img class="qr" src="{% url 'gestion:activation_qr' %}" alt="QR code à scanner avec l’application" width="220" height="220">
+        <details class="qr__manuel"><summary>Je ne peux pas scanner</summary>
+          <p>Saisissez cette clé dans l’application (type « basé sur le temps ») :</p>
+          <code class="secret">{{ secret }}</code>
+        </details>
+      </li>
+      <li>Saisissez le code à 6 chiffres affiché pour confirmer.</li>
+    </ol>
+    <form method="post" novalidate>{% csrf_token %}
+      {% if erreur %}<p class="alerte" role="alert">{{ erreur }}</p>{% endif %}
+      <label>Code à 6 chiffres<input class="champ-code" type="text" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></label>
+      <button class="btn btn--plein btn--large" type="submit">Activer et continuer</button>
+    </form>
+  </main>
+</body>
+</html>

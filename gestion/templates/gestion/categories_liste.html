@@ -1,0 +1,24 @@
+{% extends "gestion/base.html" %}
+{% block titre %}Catégories{% endblock %}
+{% block h1 %}Catégories de cours{% endblock %}
+{% block actions %}<a class="btn btn--plein" href="{% url 'gestion:categorie_nouvelle' %}">+ Nouvelle catégorie</a>{% endblock %}
+{% block contenu %}
+<div class="carte carte--table">
+  <table class="table">
+    <thead><tr><th>Catégorie</th><th class="num">Cours</th><th class="num">Ordre</th><th></th></tr></thead>
+    <tbody>
+    {% for c in categories %}
+      <tr>
+        <td><a class="lien-fort" href="{% url 'gestion:categorie_modifier' c.pk %}">{{ c.nom }}</a></td>
+        <td class="num">{{ c.nb_cours }}</td>
+        <td class="num">{{ c.ordre }}</td>
+        <td class="table__actions">
+          <a class="btn btn--petit" href="{% url 'gestion:categorie_modifier' c.pk %}">Modifier</a>
+          <a class="btn btn--petit btn--danger-lien" href="{% url 'gestion:categorie_supprimer' c.pk %}">Supprimer</a>
+        </td>
+      </tr>
+    {% empty %}<tr><td colspan="4" class="vide">Aucune catégorie.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

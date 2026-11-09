@@ -1,0 +1,8 @@
+<fieldset class="lecon">
+  {% for h in f.hidden_fields %}{{ h }}{% endfor %}
+  {% if f.non_field_errors %}<p class="alerte">{{ f.non_field_errors }}</p>{% endif %}
+  <div class="grille-form">
+    {% for champ in f.visible_fields %}{% if champ.name != 'DELETE' %}{% include "gestion/_champ.html" %}{% endif %}{% endfor %}
+  </div>
+  {% if f.DELETE %}<div class="champ champ--case"><label>{{ f.DELETE }} <span>Supprimer cette leçon</span></label></div>{% endif %}
+</fieldset>

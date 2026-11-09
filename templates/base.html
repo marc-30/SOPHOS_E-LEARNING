@@ -1,0 +1,143 @@
+{% load static %}<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titre %}Sophos Académie{% endblock %}</title>
+  <meta name="description" content="{% block description %}Apprenez, développez vos talents et donnez vie à vos projets avec Sophos Académie.{% endblock %}">
+  <link rel="icon" href="{% static 'images/logo-s.png' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body{% block classe_corps %}{% endblock %}>
+  <!-- ===== EN-TÊTE ===== -->
+  {% block entete %}<header class="entete">
+    <div class="conteneur entete__barre">
+      <a class="logo" href="{% url 'accueil' %}"><img src="{% static 'images/logo-s.png' %}" alt="Sophos Académie"></a>
+
+      <nav class="menu">
+        <div class="deroulant">
+          <button class="menu__declencheur" type="button">Cours</button>
+          <div class="deroulant__panneau">
+            <h2>Explorez votre prochain domaine créatif</h2>
+            <div class="deroulant__grille">
+              {% for categorie in menu_categories %}{% if categorie.cours_publies %}
+              <div>
+                <strong><a href="{% url 'catalogue' %}#{{ categorie.slug }}">{{ categorie.nom }}</a></strong>
+                <ul>
+                  {% for c in categorie.cours_publies|slice:":3" %}
+                  <li><a href="{{ c.get_absolute_url }}">{{ c.titre }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+              {% endif %}{% endfor %}
+            </div>
+            <a class="deroulant__tout" href="{% url 'catalogue' %}">Voir tous les cours →</a>
+          </div>
+        </div>
+        <a href="{% url 'projets' %}">Projets</a>
+        <a href="{% url 'plus' %}">Plus</a>
+      </nav>
+
+      <form class="recherche" action="{% url 'catalogue' %}" method="get">
+        <input type="search" name="q" value="{{ q|default:'' }}" placeholder="Rechercher des cours" aria-label="Rechercher des cours">
+      </form>
+
+      <div class="entete__actions">
+        {% if user.is_authenticated %}
+          <a class="lien" href="{% url 'mes_cours' %}">Mes cours</a>
+          <form action="{% url 'deconnexion' %}" method="post">{% csrf_token %}
+            <button class="bouton bouton--pilule bouton--contour" type="submit">Déconnexion</button>
+          </form>
+        {% else %}
+          <a class="lien" href="{% url 'connexion' %}">Se connecter</a>
+          <a class="bouton bouton--pilule" href="{% url 'inscription' %}">Inscrivez-vous gratuitement</a>
+        {% endif %}
+      </div>
+
+      <button class="burger" type="button" aria-label="Ouvrir le menu">☰</button>
+    </div>
+  </header>{% endblock %}
+
+  {% if messages %}
+  <div class="conteneur messages">
+    {% for message in messages %}<p class="message message--{{ message.tags }}">{{ message }}</p>{% endfor %}
+  </div>
+  {% endif %}
+
+  {% block contenu %}{% endblock %}
+
+  <!-- ===== PIED DE PAGE ===== -->
+  {% with nom=request.resolver_match.url_name %}{% if nom != 'connexion' and nom != 'inscription' and nom != 'mes_cours' and nom != 'lecon' %}
+  <section class="bandeau">
+    <div class="conteneur">
+      <h2>Prêt à apprendre quelque chose de nouveau ?</h2>
+      <p>Choisissez votre domaine et commencez dès aujourd’hui, à votre rythme.</p>
+      <a class="bouton" href="{% url 'catalogue' %}">Découvrir les cours</a>
+    </div>
+  </section>
+  {% endif %}{% endwith %}
+
+  <footer class="pied">
+    <div class="pied__haut">
+      <div class="conteneur">
+        <h2 class="pied__titre">Découvrir nos domaines et formations</h2>
+        <div class="pied__grille">
+          {% for categorie in menu_categories %}{% if categorie.cours_publies %}
+          <div>
+            <h3><a href="{% url 'catalogue' %}#{{ categorie.slug }}">{{ categorie.nom }}</a></h3>
+            <ul>
+              {% for c in categorie.cours_publies|slice:":5" %}
+              <li><a href="{{ c.get_absolute_url }}">{{ c.titre }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}{% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="pied__bas">
+      <div class="conteneur">
+        <div class="pied__grille pied__grille--liens">
+          <div>
+            <h3>À propos</h3>
+            <ul>
+              <li><a href="{% url 'plus' %}">À propos de Sophos Académie</a></li>
+              <li><a href="{% url 'projets' %}">Projets</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Découvrir Sophos</h3>
+            <ul>
+              <li><a href="{% url 'catalogue' %}">Tous les cours</a></li>
+              <li><a href="{% url 'plus' %}">Abonnements et tarifs</a></li>
+              <li><a href="{% url 'mes_cours' %}">Mes cours</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Compte</h3>
+            <ul>
+              {% if user.is_authenticated %}
+              <li><a href="{% url 'mes_cours' %}">Mes cours</a></li>
+              {% else %}
+              <li><a href="{% url 'connexion' %}">Se connecter</a></li>
+              <li><a href="{% url 'inscription' %}">Inscription gratuite</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="pied__copy">
+        <div class="conteneur">
+          <span class="pied__marque"><img src="{% static 'images/logo-s.png' %}" alt="Sophos Académie"> © {% now "Y" %} Sophos Académie. Tous droits réservés.</span>
+          <span>Français</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{% extends "gestion/base.html" %}
+{% block titre %}{% if cours %}Modifier le cours{% else %}Nouveau cours{% endif %}{% endblock %}
+{% block h1 %}{% if cours %}Modifier « {{ cours.titre }} »{% else %}Nouveau cours{% endif %}{% endblock %}
+{% block contenu %}
+<form method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+  {% if form.non_field_errors %}<p class="alerte">{{ form.non_field_errors }}</p>{% endif %}
+  <div class="carte">
+    <h2 class="carte__titre">Informations</h2>
+    <div class="grille-form">
+      {% for champ in form %}{% if champ.name != 'avec_modules' %}{% include "gestion/_champ.html" %}{% endif %}{% endfor %}
+    </div>
+  </div>
+
+  <div class="carte" id="modules" data-prefixe="{{ formset.prefix }}">
+    <h2 class="carte__titre">Contenu du cours</h2>
+    <div class="choix-structure">{% include "gestion/_champ.html" with champ=form.avec_modules %}</div>
+    <p class="champ__aide champ__aide--marge">Une leçon = une vidéo. Tout ce qui est enregistré ici apparaît sur le site dès que le cours est publié.</p>
+    {{ formset.management_form }}
+    {% if formset.non_form_errors %}<p class="alerte">{{ formset.non_form_errors }}</p>{% endif %}
+    <div id="modules-liste">
+      {% for f in formset %}{% include "gestion/_module.html" %}{% endfor %}
+    </div>
+    <template id="module-modele">{% include "gestion/_module.html" with f=formset.empty_form %}</template>
+    <button class="btn" type="button" id="module-ajouter">+ Ajouter un module</button>
+  </div>
+
+  <div class="actions actions--collant">
+    <button class="btn btn--plein" type="submit">Enregistrer</button>
+    <a class="btn" href="{% url 'gestion:cours_liste' %}">Annuler</a>
+  </div>
+</form>
+{% endblock %}

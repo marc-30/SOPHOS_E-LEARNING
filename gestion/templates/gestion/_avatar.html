@@ -1,0 +1,1 @@
+{% if photo %}<img class="avatar{% if grand %} avatar--grand{% endif %}" src="{{ photo.url }}" alt="">{% else %}<span class="avatar avatar--vide{% if grand %} avatar--grand{% endif %}" aria-hidden="true">{{ nom|slice:":1"|upper }}</span>{% endif %}

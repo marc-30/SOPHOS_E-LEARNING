@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block titre %}Plus — Sophos Académie{% endblock %}
+{% block description %}Un abonnement pour explorer les cours et donner vie à vos projets.{% endblock %}
+
+{% block contenu %}
+  <main>
+    <!-- ===== BANDEAU ===== -->
+    <section class="plus-hero">
+      <div class="conteneur plus-hero__grille">
+        <div>
+          <p class="surtitre">SOPHOS ACADÉMIE PLUS</p>
+          <h1>Donnez plus de place à votre créativité.</h1>
+          <p>Un abonnement pour explorer les cours, développer vos compétences et donner vie à vos projets.</p>
+          <a class="bouton" href="#abonnements">Découvrir les abonnements</a>
+          <p class="plus-hero__note">Offres et tarifs provisoires · Paiement non activé</p>
+        </div>
+        <div class="mosaique">
+          {% for c in images %}<img src="{{ c.image.url }}" alt="">{% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== AVANTAGES ===== -->
+    <section class="section">
+      <div class="conteneur">
+        <h2 class="section__titre" style="margin-bottom:24px">Apprenez, pratiquez, créez.</h2>
+        <div class="avantages">
+          <div class="avantage">
+            <h3>Un catalogue à explorer</h3>
+            <p>Découvrez des disciplines variées et choisissez les cours qui correspondent à vos envies.</p>
+          </div>
+          <div class="avantage">
+            <h3>Des projets concrets</h3>
+            <p>Passez de la théorie à la pratique avec des exercices guidés et des réalisations personnelles.</p>
+          </div>
+          <div class="avantage">
+            <h3>Votre rythme, votre parcours</h3>
+            <p>Revenez sur les leçons et construisez une routine créative qui vous ressemble.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ABONNEMENTS ===== -->
+    <section class="section section--sombre centre" id="abonnements">
+      <div class="conteneur">
+        <h2 class="section__titre">Choisissez votre abonnement</h2>
+        <p class="section__intro" style="font-size:13px">Tarifs de démonstration, à ajuster avant la mise en ligne.</p>
+        <div class="offres" style="text-align:left">
+          <div class="offre">
+            <p class="offre__type">MENSUEL · PLUS DE SOUPLESSE</p>
+            <h3>Un mois pour explorer</h3>
+            <p class="offre__prix">15 $ / mois</p>
+            <p>Facturation mensuelle. Offre provisoire.</p>
+            <p>Accès au catalogue Plus · Exercices pratiques · Apprentissage à votre rythme</p>
+            <button class="bouton bouton--large" disabled>Souscription bientôt disponible</button>
+          </div>
+          <div class="offre">
+            <p class="offre__type">ANNUEL · ÉCONOMISEZ 33 %</p>
+            <h3>Un an pour créer</h3>
+            <p class="offre__prix">120 $ / an</p>
+            <p>Soit 10 $ par mois, facturés annuellement.</p>
+            <p>Accès au catalogue Plus · Exercices pratiques · Apprentissage à votre rythme</p>
+            <button class="bouton bouton--large" disabled>Souscription bientôt disponible</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== APPEL FINAL ===== -->
+    <section class="section">
+      <div class="conteneur">
+        <h2 class="section__titre">Quel sera votre prochain projet ?</h2>
+        <p class="section__intro">Inspirez-vous des réalisations de la communauté et choisissez votre prochain domaine d’apprentissage.</p>
+        <a class="bouton" href="{% url 'projets' %}">Voir les projets</a>
+      </div>
+    </section>
+  </main>
+{% endblock %}

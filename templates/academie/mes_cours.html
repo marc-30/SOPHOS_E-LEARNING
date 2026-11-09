@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block titre %}Mes cours — Sophos Académie{% endblock %}
+
+{% block contenu %}
+<main class="section">
+  <div class="conteneur">
+    <h1 class="section__titre titre-page">Bonjour {{ user.first_name|default:user.username }} 👋</h1>
+    <p class="section__intro">Retrouvez ici tous les cours auxquels vous avez accès.</p>
+
+    <div class="grille-cours">
+      {% for ins in inscriptions %}{% with c=ins.cours %}
+      <article class="carte">
+        <a class="carte__image" href="{{ c.get_absolute_url }}">
+          <img src="{{ c.image.url }}" alt="" loading="lazy">
+          <div class="carte__infos"><span>{{ c.niveau }}</span><span>{{ c.duree }}</span></div>
+        </a>
+        <div class="carte__corps">
+          <h3><a href="{{ c.get_absolute_url }}">{{ c.titre }}</a></h3>
+          <p class="carte__auteur">{{ c.auteur }}</p>
+          <p class="carte__meta">{% if ins.gratuite %}Cours gratuit{% else %}Acheté{% endif %} · inscrit le {{ ins.cree_le|date:"j F Y" }}</p>
+          <div class="progression" role="img" aria-label="Progression {{ ins.pourcentage }} %"><div class="progression__barre" style="width: {{ ins.pourcentage }}%"></div></div>
+          <p class="carte__meta">{{ ins.faites }} / {{ ins.total }} leçon{{ ins.total|pluralize }} terminée{{ ins.faites|pluralize }} · {{ ins.pourcentage }} %</p>
+          <a class="bouton bouton--large" href="{% if ins.reprise %}{{ ins.reprise.get_absolute_url }}{% else %}{{ c.get_absolute_url }}{% endif %}">{% if ins.faites %}{% if ins.pourcentage == 100 %}Revoir le cours{% else %}Reprendre{% endif %}{% else %}Commencer{% endif %}</a>
+        </div>
+      </article>
+      {% endwith %}{% empty %}
+      <p class="vide">Vous n’avez pas encore de cours. <a href="{% url 'catalogue' %}">Découvrir le catalogue</a></p>
+      {% endfor %}
+    </div>
+  </div>
+</main>
+{% endblock %}

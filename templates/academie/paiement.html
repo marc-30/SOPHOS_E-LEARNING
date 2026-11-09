@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load academie_tags %}
+
+{% block titre %}Paiement — Sophos Académie{% endblock %}
+
+{% block contenu %}
+<main class="section">
+  <div class="conteneur conteneur--etroit">
+    <div class="boite">
+      <h1 class="section__titre">Finaliser votre achat</h1>
+      <div class="recap">
+        <img src="{{ achat.cours.image.url }}" alt="">
+        <div>
+          <p><strong>{{ achat.cours.titre }}</strong></p>
+          <p class="carte__meta">{{ achat.cours.auteur }}</p>
+          <p class="recap__montant">{{ achat.montant|prix }}</p>
+        </div>
+      </div>
+
+      {% if mode_test %}
+        <p class="alerte">Mode test : aucun argent n’est débité. Ce bouton sera remplacé par le paiement Mobile Money / carte.</p>
+        <form method="post">{% csrf_token %}
+          <button class="bouton bouton--large" type="submit">Confirmer le paiement (test)</button>
+        </form>
+      {% else %}
+        <p class="alerte">Le paiement en ligne sera bientôt disponible.</p>
+      {% endif %}
+      <p class="petit"><a href="{{ achat.cours.get_absolute_url }}">← Retour au cours</a></p>
+    </div>
+  </div>
+</main>
+{% endblock %}

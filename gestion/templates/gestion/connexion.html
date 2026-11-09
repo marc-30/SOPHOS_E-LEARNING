@@ -1,0 +1,24 @@
+{% load static %}<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Connexion — Administration Sophos</title>
+  <link rel="icon" href="{% static 'images/logo.jpg' %}">
+  <link rel="stylesheet" href="{% static 'gestion/gestion.css' %}">
+</head>
+<body class="connexion">
+  <main class="connexion__boite">
+    <img class="connexion__logo" src="{% static 'images/logo.jpg' %}" alt="Sophos Académie">
+    <h1>Espace administration</h1>
+    <form method="post" novalidate>{% csrf_token %}
+      {% if form.non_field_errors %}<p class="alerte" role="alert">{{ form.non_field_errors.0 }}</p>{% endif %}
+      <label>Identifiant<input type="text" name="username" autocomplete="username" maxlength="150" required autofocus></label>
+      <label>Mot de passe<input type="password" name="password" autocomplete="current-password" maxlength="256" required></label>
+      <input type="hidden" name="next" value="{{ next }}">
+      <button class="btn btn--plein btn--large" type="submit">Se connecter</button>
+    </form>
+  </main>
+</body>
+</html>

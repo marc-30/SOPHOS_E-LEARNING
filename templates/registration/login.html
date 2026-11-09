@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block classe_corps %} class="page-auth"{% endblock %}
+{% block entete %}{% endblock %}
+{% block titre %}Connexion — Sophos Académie{% endblock %}
+
+{% block contenu %}
+<main class="auth">
+  <div class="auth__boite">
+    <a href="{% url 'accueil' %}"><img class="auth__logo" src="{% static 'images/logo.jpg' %}" alt="Sophos Académie"></a>
+    <h1>Se connecter</h1>
+    <form method="post" class="formulaire" novalidate>{% csrf_token %}
+      {% if form.non_field_errors %}<p class="auth__alerte" role="alert">Nom d’utilisateur ou mot de passe incorrect.</p>{% endif %}
+      <label>Nom d’utilisateur<input type="text" name="username" value="{{ form.username.value|default:'' }}" autocomplete="username" required autofocus></label>
+      <label>Mot de passe<input type="password" name="password" autocomplete="current-password" required></label>
+      <input type="hidden" name="next" value="{{ next }}">
+      <button class="bouton bouton--large" type="submit">Se connecter</button>
+    </form>
+    <p class="petit">Pas encore de compte ? <a href="{% url 'inscription' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Inscrivez-vous gratuitement</a></p>
+  </div>
+</main>
+{% endblock %}

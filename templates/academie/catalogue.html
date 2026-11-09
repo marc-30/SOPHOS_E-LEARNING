@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block titre %}Cours — Sophos Académie{% endblock %}
+{% block description %}Trouvez le cours qui vous inspire parmi nos domaines créatifs.{% endblock %}
+
+{% block contenu %}
+<main class="section">
+  <div class="conteneur">
+    <h1 class="section__titre titre-page">{% if q %}Résultats pour « {{ q }} »{% else %}Trouvez le cours qui vous inspire{% endif %}</h1>
+    <p class="section__intro">Explorez nos domaines créatifs et apprenez à votre rythme.</p>
+
+    {% for categorie in categories %}
+    <section class="categorie" id="{{ categorie.slug }}">
+      <h2>{{ categorie.nom }}</h2>
+      <div class="grille-cours">
+        {% for c in categorie.liste %}{% include "academie/_carte_cours.html" %}{% endfor %}
+      </div>
+    </section>
+    {% empty %}
+    <p class="vide">Aucun cours ne correspond à votre recherche. <a href="{% url 'catalogue' %}">Voir tous les cours</a></p>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}

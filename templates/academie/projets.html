@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block titre %}Projets — Sophos Académie{% endblock %}
+{% block description %}Découvrez les projets réalisés par nos apprenants.{% endblock %}
+
+{% block contenu %}
+<main class="section">
+  <div class="conteneur">
+    <h1 class="section__titre titre-page">Des cours aux créations.</h1>
+    <p class="section__intro">Un espace pour présenter les projets réalisés par vos apprenants. Les exemples ci-dessous sont des démonstrations, à remplacer par vos réalisations.</p>
+
+    <div class="grille-projets">
+      {% for p in projets %}
+      <article class="projet">
+        <img src="{{ p.image.url }}" alt="" loading="lazy">
+        <div class="projet__corps">
+          <p class="projet__categorie">{{ p.categorie }}</p>
+          <h3>{{ p.titre }}</h3>
+          <p class="projet__note">{{ p.note }}</p>
+        </div>
+      </article>
+      {% empty %}
+      <p class="vide">Aucun projet pour le moment.</p>
+      {% endfor %}
+    </div>
+  </div>
+</main>
+{% endblock %}

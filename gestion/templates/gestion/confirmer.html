@@ -1,0 +1,12 @@
+{% extends "gestion/base.html" %}
+{% block titre %}{{ titre }}{% endblock %}
+{% block h1 %}{{ titre }}{% endblock %}
+{% block contenu %}
+<div class="carte carte--etroite">
+  <p>Voulez-vous vraiment supprimer <strong>{{ objet }}</strong> ? Cette action est définitive.</p>
+  <form method="post" class="actions">{% csrf_token %}
+    <button class="btn btn--danger" type="submit">Oui, supprimer</button>
+    <a class="btn" href="{% url retour %}">Annuler</a>
+  </form>
+</div>
+{% endblock %}

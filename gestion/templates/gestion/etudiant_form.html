@@ -1,0 +1,13 @@
+{% extends "gestion/base.html" %}
+{% block titre %}Modifier l’étudiant{% endblock %}
+{% block h1 %}Modifier « {{ etudiant.get_full_name|default:etudiant.username }} »{% endblock %}
+{% block contenu %}
+<form method="post" enctype="multipart/form-data" novalidate class="carte carte--etroite">{% csrf_token %}
+  {% if form.non_field_errors %}<p class="alerte">{{ form.non_field_errors }}</p>{% endif %}
+  {% for champ in form %}{% include "gestion/_champ.html" %}{% endfor %}
+  <div class="actions">
+    <button class="btn btn--plein" type="submit">Enregistrer</button>
+    <a class="btn" href="{% url 'gestion:etudiant_detail' etudiant.pk %}">Annuler</a>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,5 @@
+<form class="recherche" method="get" role="search">
+  <input type="search" name="q" value="{{ q }}" placeholder="{{ placeholder }}" maxlength="100" aria-label="Rechercher">
+  <button class="btn" type="submit">Rechercher</button>
+  {% if q %}<a class="btn btn--lien" href="?">Effacer</a>{% endif %}
+</form>

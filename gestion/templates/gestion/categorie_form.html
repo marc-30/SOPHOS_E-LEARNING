@@ -1,0 +1,12 @@
+{% extends "gestion/base.html" %}
+{% block titre %}{% if categorie %}Modifier la catégorie{% else %}Nouvelle catégorie{% endif %}{% endblock %}
+{% block h1 %}{% if categorie %}Modifier « {{ categorie.nom }} »{% else %}Nouvelle catégorie{% endif %}{% endblock %}
+{% block contenu %}
+<form method="post" novalidate class="carte carte--etroite">{% csrf_token %}
+  {% for champ in form %}{% include "gestion/_champ.html" %}{% endfor %}
+  <div class="actions">
+    <button class="btn btn--plein" type="submit">Enregistrer</button>
+    <a class="btn" href="{% url 'gestion:categories_liste' %}">Annuler</a>
+  </div>
+</form>
+{% endblock %}

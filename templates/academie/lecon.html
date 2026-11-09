@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block titre %}{{ lecon.titre }} — {{ cours.titre }}{% endblock %}
+
+{% block contenu %}
+<main class="section">
+  <div class="conteneur lecon">
+    <aside class="lecon__sommaire">
+      <a class="fil" href="{{ cours.get_absolute_url }}">← {{ cours.titre }}</a>
+      {% if cours.avec_modules %}
+      {% for m in modules %}{% if m.lecons.all %}
+      <h3 class="module__titre module__titre--compact">{{ m.titre }}</h3>
+      <ol class="programme programme--compact">
+        {% for l in m.lecons.all %}
+        <li class="{% if l.pk == lecon.pk %}actuelle{% endif %}{% if l.pk in terminees %} terminee{% endif %}">
+          {% if achete or l.apercu %}<a href="{{ l.get_absolute_url }}">{{ l.titre }}</a>
+          {% else %}<span>{{ l.titre }}</span><span class="cadenas">🔒</span>{% endif %}
+          {% if l.pk in terminees %}<span class="coche" aria-label="Terminée">✓</span>{% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+      {% endif %}{% endfor %}
+      {% else %}
+      <ol class="programme programme--compact">
+        {% for l in lecons %}
+        <li class="{% if l.pk == lecon.pk %}actuelle{% endif %}{% if l.pk in terminees %} terminee{% endif %}">
+          {% if achete or l.apercu %}<a href="{{ l.get_absolute_url }}">{{ l.titre }}</a>
+          {% else %}<span>{{ l.titre }}</span><span class="cadenas">🔒</span>{% endif %}
+          {% if l.pk in terminees %}<span class="coche" aria-label="Terminée">✓</span>{% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+      {% endif %}
+    </aside>
+
+    <article class="lecon__contenu">
+      <h1 class="section__titre titre-page">{{ lecon.titre }}</h1>
+      {% if lecon.video_url %}
+      <div class="video">
+        <iframe src="{{ lecon.video_integree }}" title="{{ lecon.titre }}" allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      {% endif %}
+      {% if lecon.contenu %}<div class="texte">{{ lecon.contenu|linebreaks }}</div>{% endif %}
+      <div class="lecon__nav">
+        {% if precedente and achete or precedente.apercu %}<a class="bouton bouton--contour" href="{{ precedente.get_absolute_url }}">← Précédente</a>{% endif %}
+        {% if peut_terminer %}
+          <form method="post" action="{% url 'lecon_terminer' cours.slug lecon.pk %}">{% csrf_token %}
+            <button class="bouton" type="submit">{% if suivante %}{% if terminee %}Leçon suivante →{% else %}Terminer et passer à la suivante →{% endif %}{% else %}Terminer le cours ✓{% endif %}</button>
+          </form>
+        {% elif suivante and suivante.apercu %}<a class="bouton" href="{{ suivante.get_absolute_url }}">Suivante →</a>
+        {% elif not achete %}<a class="bouton" href="{{ cours.get_absolute_url }}">Accéder au cours complet</a>{% endif %}
+      </div>
+    </article>
+  </div>
+</main>
+{% endblock %}

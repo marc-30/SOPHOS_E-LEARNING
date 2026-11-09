@@ -1,0 +1,21 @@
+{% extends "gestion/base.html" %}
+{% block titre %}Mon compte{% endblock %}
+{% block h1 %}Mon compte{% endblock %}
+{% block contenu %}
+<div class="carte carte--etroite">
+  <h2 class="carte__titre">Mot de passe</h2>
+  <form method="post" novalidate>{% csrf_token %}
+    {% for champ in form %}{% include "gestion/_champ.html" %}{% endfor %}
+    <button class="btn btn--plein" type="submit">Changer le mot de passe</button>
+  </form>
+</div>
+<div class="carte carte--etroite">
+  <h2 class="carte__titre">Double authentification</h2>
+  <p>Activée. Il vous reste <strong>{{ nb_codes }}</strong> code{{ nb_codes|pluralize }} de secours.</p>
+  <form method="post" action="{% url 'gestion:regenerer_codes' %}" novalidate>{% csrf_token %}
+    <div class="champ"><label for="code-regen">Pour générer de nouveaux codes, saisissez le code actuel de votre application</label>
+      <input id="code-regen" class="champ-code" type="text" name="code" inputmode="numeric" autocomplete="off" maxlength="10" required></div>
+    <button class="btn" type="submit">Régénérer mes codes de secours</button>
+  </form>
+</div>
+{% endblock %}

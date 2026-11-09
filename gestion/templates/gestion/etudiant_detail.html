@@ -1,0 +1,47 @@
+{% extends "gestion/base.html" %}
+{% block titre %}{{ etudiant.get_username }}{% endblock %}
+{% block h1 %}{{ etudiant.get_full_name|default:etudiant.username }}{% endblock %}
+{% block actions %}
+<form method="post" action="{% url 'gestion:etudiant_statut' etudiant.pk %}">{% csrf_token %}
+  <button class="btn {% if etudiant.is_active %}btn--danger{% else %}btn--plein{% endif %}" type="submit">{% if etudiant.is_active %}Désactiver le compte{% else %}Réactiver le compte{% endif %}</button>
+</form>
+{% endblock %}
+{% block contenu %}
+<div class="carte carte--photo">
+  {% include "gestion/_avatar.html" with photo=profil.photo nom=etudiant.get_full_name|default:etudiant.username grand=True %}
+  <div>
+    <strong>{{ etudiant.get_full_name|default:etudiant.username }}</strong>
+    <p class="champ__aide">{{ etudiant.email|default:"Aucune adresse e-mail" }}</p>
+    <a class="btn btn--plein" href="{% url 'gestion:etudiant_modifier' etudiant.pk %}">Modifier l’étudiant</a>
+  </div>
+</div>
+<div class="kpis">
+  <div class="kpi"><span class="kpi__nom">Identifiant</span><strong class="kpi__valeur kpi__valeur--texte">{{ etudiant.username }}</strong></div>
+  <div class="kpi"><span class="kpi__nom">E-mail</span><strong class="kpi__valeur kpi__valeur--texte">{{ etudiant.email|default:"—" }}</strong></div>
+  <div class="kpi"><span class="kpi__nom">Jours d’activité</span><strong class="kpi__valeur">{{ jours_actifs }}</strong></div>
+  <div class="kpi"><span class="kpi__nom">Total dépensé</span><strong class="kpi__valeur">{{ depense }}</strong></div>
+</div>
+<div class="carte carte--table">
+  <h2 class="carte__titre carte__titre--marge">Cours auxquels l’étudiant a accès</h2>
+  <table class="table">
+    <thead><tr><th>Cours</th><th>Inscrit le</th><th>Type</th></tr></thead>
+    <tbody>
+    {% for i in inscriptions %}
+      <tr><td>{{ i.cours.titre }}</td><td>{{ i.cree_le|date:"d/m/Y" }}</td><td>{% if i.gratuite %}Gratuit{% else %}Payant{% endif %}</td></tr>
+    {% empty %}<tr><td colspan="3" class="vide">Aucun cours.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="carte carte--table">
+  <h2 class="carte__titre carte__titre--marge">Achats</h2>
+  <table class="table">
+    <thead><tr><th>Cours</th><th>Date</th><th class="num">Montant</th><th>Statut</th></tr></thead>
+    <tbody>
+    {% for a in achats %}
+      <tr><td>{{ a.cours.titre }}</td><td>{{ a.cree_le|date:"d/m/Y H:i" }}</td><td class="num">{{ a.montant }}</td><td><span class="pastille pastille--{{ a.statut }}">{{ a.get_statut_display }}</span></td></tr>
+    {% empty %}<tr><td colspan="4" class="vide">Aucun achat.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+<p><a class="btn" href="{% url 'gestion:etudiants_liste' %}">← Retour à la liste</a></p>
+{% endblock %}

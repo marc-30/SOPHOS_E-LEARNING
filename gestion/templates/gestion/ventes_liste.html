@@ -1,0 +1,28 @@
+{% extends "gestion/base.html" %}
+{% block titre %}Ventes{% endblock %}
+{% block h1 %}Ventes{% endblock %}
+{% block contenu %}
+<form class="recherche" method="get">
+  <select name="statut" aria-label="Statut">
+    <option value="">Tous les statuts</option>
+    {% for v, nom in statuts %}<option value="{{ v }}"{% if v == statut %} selected{% endif %}>{{ nom }}</option>{% endfor %}
+  </select>
+  <button class="btn" type="submit">Filtrer</button>
+</form>
+<div class="carte carte--table">
+  <table class="table">
+    <thead><tr><th>Date</th><th>Étudiant</th><th>Cours</th><th class="num">Montant ({{ devise }})</th><th>Statut</th></tr></thead>
+    <tbody>
+    {% for a in page %}
+      <tr>
+        <td>{{ a.cree_le|date:"d/m/Y H:i" }}</td>
+        <td><a class="lien-fort" href="{% url 'gestion:etudiant_detail' a.eleve_id %}">{{ a.eleve.get_username }}</a></td>
+        <td>{{ a.cours.titre }}</td><td class="num">{{ a.montant }}</td>
+        <td><span class="pastille pastille--{{ a.statut }}">{{ a.get_statut_display }}</span></td>
+      </tr>
+    {% empty %}<tr><td colspan="5" class="vide">Aucune vente.</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "gestion/_pagination.html" %}
+{% endblock %}

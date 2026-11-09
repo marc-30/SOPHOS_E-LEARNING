@@ -1,0 +1,18 @@
+<fieldset class="module-bloc">
+  {% for h in f.hidden_fields %}{{ h }}{% endfor %}
+  {% if f.non_field_errors %}<p class="alerte">{{ f.non_field_errors }}</p>{% endif %}
+  <div class="module-bloc__entete">
+    <div class="champ">{{ f.titre.errors }}<label for="{{ f.titre.id_for_label }}">Titre du module <abbr title="obligatoire">*</abbr></label>{{ f.titre }}</div>
+    <div class="champ champ--ordre"><label for="{{ f.ordre.id_for_label }}">Ordre</label>{{ f.ordre }}</div>
+    {% if f.DELETE %}<div class="champ champ--case"><label>{{ f.DELETE }} <span>Supprimer ce module et ses leçons</span></label></div>{% endif %}
+  </div>
+  {% with l=f.lecons %}
+  {{ l.management_form }}
+  {% if l.non_form_errors %}<p class="alerte">{{ l.non_form_errors }}</p>{% endif %}
+  <div class="lecons-liste">
+    {% for lf in l %}{% include "gestion/_lecon.html" with f=lf %}{% endfor %}
+  </div>
+  <template class="lecon-modele">{% include "gestion/_lecon.html" with f=l.empty_form %}</template>
+  {% endwith %}
+  <button class="btn btn--petit lecon-ajouter" type="button">+ Ajouter une leçon</button>
+</fieldset>

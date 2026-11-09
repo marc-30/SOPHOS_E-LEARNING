@@ -1,0 +1,15 @@
+{% load academie_tags %}
+<article class="carte">
+  <a class="carte__image" href="{{ c.get_absolute_url }}">
+    <img src="{{ c.image.url }}" alt="" loading="lazy">
+    {% if c.badge %}<span class="carte__badge{% if c.badge == 'NOUVEAU' %} carte__badge--nouveau{% endif %}">{{ c.badge }}</span>{% endif %}
+    <div class="carte__infos"><span>{{ c.niveau }}</span><span>{{ c.duree }}</span></div>
+  </a>
+  <div class="carte__corps">
+    <h3><a href="{{ c.get_absolute_url }}">{{ c.titre }}</a></h3>
+    <p class="carte__auteur">{{ c.auteur }}</p>
+    <p class="carte__meta">{{ c.sous_titre }}</p>
+    <p class="carte__prix">{{ c.reduction }}{% if c.reduction and c.prix_barre %} · {% endif %}{% if c.prix_barre %}<s>{{ c.prix_barre|prix }}</s>{% endif %}</p>
+    <a class="bouton bouton--large" href="{{ c.get_absolute_url }}">{% if c.est_gratuit %}Gratuit — s’inscrire{% else %}Acheter {{ c.prix|prix }}{% endif %}</a>
+  </div>
+</article>

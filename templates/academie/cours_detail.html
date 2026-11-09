@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load academie_tags %}
+
+{% block titre %}{{ cours.titre }} — Sophos Académie{% endblock %}
+{% block description %}{{ cours.description|truncatewords:25 }}{% endblock %}
+
+{% block contenu %}
+<main>
+  <section class="hero">
+    <div class="conteneur hero__grille">
+      <div>
+        <p class="fil"><a href="{% url 'catalogue' %}#{{ cours.categorie.slug }}">{{ cours.categorie }}</a></p>
+        <h1>{{ cours.titre }}</h1>
+        {% if cours.description %}<p class="hero__texte">{{ cours.description|linebreaksbr }}</p>{% endif %}
+        {% if cours.professeur.photo %}<p class="hero__prof"><img src="{{ cours.professeur.photo.url }}" alt=""><span>Enseigné par <strong>{{ cours.professeur.nom }}</strong></span></p>{% endif %}
+        <p class="hero__stats"><span>{{ cours.auteur }}</span><span>{{ cours.niveau }}</span><span>{{ cours.duree }}</span></p>
+
+        {% if achete %}
+          <span class="etiquette">VOUS AVEZ ACCÈS À CE COURS</span><br>
+          {% if premiere %}<a class="bouton" href="{{ premiere.get_absolute_url }}">Commencer le cours</a>{% endif %}
+        {% elif cours.est_gratuit %}
+          <p class="hero__prix">Cours gratuit</p>
+          {% if user.is_authenticated %}
+            <form action="{% url 'acheter' cours.slug %}" method="post">{% csrf_token %}
+              <button class="bouton" type="submit">S’inscrire gratuitement</button>
+            </form>
+          {% else %}
+            <a class="bouton" href="{% url 'connexion' %}?next={{ request.path|urlencode }}">S’inscrire gratuitement</a>
+            <p class="hero__note">Connectez-vous ou créez un compte gratuit pour vous inscrire.</p>
+          {% endif %}
+        {% else %}
+          <p class="hero__prix">{{ cours.reduction }}{% if cours.prix_barre %} · <s>{{ cours.prix_barre|prix }}</s>{% endif %}</p>
+          {% if user.is_authenticated %}
+            <form action="{% url 'acheter' cours.slug %}" method="post">{% csrf_token %}
+              <button class="bouton" type="submit">Acheter {{ cours.prix|prix }}</button>
+            </form>
+          {% else %}
+            <a class="bouton" href="{% url 'connexion' %}?next={{ request.path|urlencode }}">Acheter {{ cours.prix|prix }}</a>
+            <p class="hero__note">Connectez-vous ou créez un compte gratuit pour acheter.</p>
+          {% endif %}
+        {% endif %}
+      </div>
+      <div class="hero__image">
+        {% if cours.video_bienvenue %}
+        <video controls preload="metadata" playsinline poster="{{ cours.image.url }}" src="{{ cours.video_bienvenue.url }}">Votre navigateur ne lit pas cette vidéo.</video>
+        {% else %}<img src="{{ cours.image.url }}" alt="{{ cours.titre }}">{% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="conteneur conteneur--etroit">
+      <h2 class="section__titre">Programme du cours</h2>
+      {% if nb_lecons %}
+      {% if cours.avec_modules %}
+      <p class="section__intro">{{ modules|length }} module{{ modules|length|pluralize }} · {{ nb_lecons }} leçon{{ nb_lecons|pluralize }}</p>
+      {% for m in modules %}{% if m.lecons.all %}
+      <section class="module">
+        <h3 class="module__titre"><span>Module {{ forloop.counter }}</span> {{ m.titre }}</h3>
+        <ol class="programme">
+          {% for l in m.lecons.all %}
+          <li>
+            {% if achete or l.apercu %}
+              <a href="{{ l.get_absolute_url }}">{{ l.titre }}</a>
+              {% if l.apercu and not achete %}<span class="pastille">Aperçu gratuit</span>{% endif %}
+            {% else %}
+              <span>{{ l.titre }}</span><span class="cadenas" aria-label="Réservé aux élèves">🔒</span>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ol>
+      </section>
+      {% endif %}{% endfor %}
+      {% else %}
+      <p class="section__intro">{{ nb_lecons }} leçon{{ nb_lecons|pluralize }}</p>
+      <ol class="programme">
+        {% for l in lecons %}
+        <li>
+          {% if achete or l.apercu %}
+            <a href="{{ l.get_absolute_url }}">{{ l.titre }}</a>
+            {% if l.apercu and not achete %}<span class="pastille">Aperçu gratuit</span>{% endif %}
+          {% else %}
+            <span>{{ l.titre }}</span><span class="cadenas" aria-label="Réservé aux élèves">🔒</span>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+      {% endif %}
+      {% else %}
+      <p class="vide">Le programme de ce cours sera bientôt disponible.</p>
+      {% endif %}
+    </div>
+  </section>
+</main>
+{% endblock %}

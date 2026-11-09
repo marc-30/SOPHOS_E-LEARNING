@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load academie_tags %}
+
+{% block contenu %}
+<main>
+  {% if vedettes %}
+  <!-- ===== CARROUSEL (cours cochés « en vedette » dans l'admin) ===== -->
+  <section class="hero carrousel" aria-roledescription="carrousel" aria-label="Cours en vedette">
+    <div class="carrousel__fenetre">
+      <div class="carrousel__piste">
+        {% for vedette in vedettes %}
+        <div class="carrousel__diapo" role="group" aria-roledescription="diapositive" aria-label="{{ forloop.counter }} sur {{ vedettes|length }}">
+          <div class="conteneur hero__grille">
+            <div>
+              <p class="fil"><a href="{% url 'catalogue' %}#{{ vedette.categorie.slug }}">{{ vedette.categorie }}</a></p>
+              {% if forloop.first %}<h1 class="hero__titre">{{ vedette.titre }}</h1>{% else %}<h2 class="hero__titre">{{ vedette.titre }}</h2>{% endif %}
+              <p class="hero__texte">{{ vedette.description|truncatewords:40 }}</p>
+              {% if vedette.sous_titre %}<p class="hero__stats">{{ vedette.sous_titre }}</p>{% endif %}
+              <span class="etiquette">GRATUIT AVEC PLUS</span>
+              <p class="hero__prix">{{ vedette.reduction }}{% if vedette.prix_barre %} · <s>{{ vedette.prix_barre|prix }}</s>{% endif %}</p>
+              <a class="bouton" href="{{ vedette.get_absolute_url }}">{% if vedette.est_gratuit %}Gratuit — s’inscrire{% else %}Acheter {{ vedette.prix|prix }}{% endif %}</a>
+            </div>
+            <a class="hero__image" href="{{ vedette.get_absolute_url }}" tabindex="-1">
+              <img src="{{ vedette.image.url }}" alt="{{ vedette.titre }}"{% if not forloop.first %} loading="lazy"{% endif %}>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if vedettes|length > 1 %}
+    <div class="conteneur carrousel__controles">
+      <button class="carrousel__fleche" type="button" data-precedent aria-label="Cours précédent">‹</button>
+      <div class="carrousel__points">
+        {% for vedette in vedettes %}
+        <button type="button" class="carrousel__point" data-point="{{ forloop.counter0 }}" aria-label="Afficher : {{ vedette.titre }}"></button>
+        {% endfor %}
+      </div>
+      <button class="carrousel__fleche" type="button" data-suivant aria-label="Cours suivant">›</button>
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <section class="section">
+    <div class="conteneur">
+      <h2 class="section__titre">Apprenez et développez vos compétences créatives.</h2>
+      <p class="section__intro">Découvrez des cours dispensés par des professionnels passionnés dans les domaines du design, de l’illustration, de la mode et de l’artisanat. Apprenez à travers des projets concrets, à votre rythme, et rejoignez une communauté qui crée, apprend et partage.</p>
+
+      <div class="grille-cours">
+        {% for c in cours_list %}{% include "academie/_carte_cours.html" %}{% endfor %}
+      </div>
+
+      <div class="voir-plus">
+        <a class="bouton" href="{% url 'catalogue' %}">Voir plus de cours Sophos Académie →</a>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% load static %}<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Vérification — Administration Sophos</title>
+  <link rel="icon" href="{% static 'images/logo.jpg' %}">
+  <link rel="stylesheet" href="{% static 'gestion/gestion.css' %}">
+</head>
+<body class="connexion">
+  <main class="connexion__boite">
+    <img class="connexion__logo" src="{% static 'images/logo.jpg' %}" alt="Sophos Académie">
+    <h1>Vérification en deux étapes</h1>
+    <p class="connexion__aide">Ouvrez votre application d’authentification et saisissez le code à 6 chiffres affiché pour « Sophos Académie ».</p>
+    <form method="post" novalidate>{% csrf_token %}
+      {% if erreur %}<p class="alerte" role="alert">{{ erreur }}</p>{% endif %}
+      <label>Code<input class="champ-code" type="text" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="20" required autofocus></label>
+      <button class="btn btn--plein btn--large" type="submit">Valider</button>
+    </form>
+    <p class="connexion__aide connexion__aide--petit">Téléphone perdu ? Saisissez un de vos codes de secours à la place. <a href="{% url 'gestion:connexion' %}">Recommencer</a></p>
+  </main>
+</body>
+</html>
